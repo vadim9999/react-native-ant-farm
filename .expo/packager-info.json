@@ -1,10 +1,10 @@
 {
   "devToolsPort": 19002,
-  "expoServerPort": null,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 12995,
+  "expoServerNgrokUrl": "https://tn-pqi.vadim9999.react-native-ant-farm.exp.direct",
+  "packagerNgrokUrl": "https://packager.tn-pqi.vadim9999.react-native-ant-farm.exp.direct",
+  "ngrokPid": 13030,
   "webpackServerPort": null
 }

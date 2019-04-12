@@ -2149,6 +2149,11 @@ dom-walk@^0.1.0:
   resolved "https://registry.yarnpkg.com/dom-walk/-/dom-walk-0.1.1.tgz#672226dc74c8f799ad35307df936aba11acd6018"
   integrity sha1-ZyIm3HTI95mtNTB9+TaroRrNYBg=
 
+easy-bluetooth-classic@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/easy-bluetooth-classic/-/easy-bluetooth-classic-1.0.4.tgz#95e17a504a10fabfeda9e98301acab7d79eab33d"
+  integrity sha512-/2VajdZba2FRMKzPk8jDhsvgLSbsO1qoRidi158uiItTfYHFP6Y+A+CXerqASYkL5OEMbQGift2KrtxHU4UZCg==
+
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
