@@ -5,8 +5,9 @@ export default class Scan extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            language:"",
+            device: "",
             // activity: true
+            
           }
         this.onScan = this.onScan.bind(this)
     }
@@ -22,10 +23,16 @@ export default class Scan extends React.Component {
         //     activity: false
         // })
         if (devices != undefined ){
+            
             return (
+              
                 devices.map(device =>{ 
+                  var pair = "";
+                  if (device.uuids != undefined & device["uuids"].length > 0){
+                    pair = "Пара"
+                  }
                     if (device!= undefined & device.name !=undefined)
-                return <Picker.Item label={device.name + " " + device.address} value={device.name} />
+                return <Picker.Item label={device.name + " " + device.address + " " + pair} value={device.name} />
                 else if( device!= undefined & device.address != undefined){
                     return <Picker.Item label={"NoName" + " " + device.address} value={"NoName"} />
                 } else return <Picker.Item label={""} value={""} />
@@ -43,25 +50,28 @@ export default class Scan extends React.Component {
             <Text>Виберіть ферму</Text>
             <View style = {styles.picker_activity}>
           <Picker
-            selectedValue={this.state.language}
+            selectedValue={this.state.device}
             style={{ height: 50, width: 100 }}
             onValueChange={(itemValue, itemIndex) =>{
               console.log("Changed values");
               
-              this.setState({ language: itemValue })}
+              this.setState({ device: itemValue })}
             }>
             {this.getListOfDevices(this.props.devices)}
             
           </Picker>
           <ActivityIndicator animating={this.props.activity} size="small" color="#0000ff" />
           </View>
-        <Button
+        <View style={styles.buttons}>
+          <Button
           onPress={this.onScan}
+          width="40"
           title="Сканувати"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
           
         />
+        </View>
         </View>
         )
     }
@@ -78,15 +88,16 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     },
     buttons:{
-      flex:3,
+      // flex:3,
       backgroundColor: 'steelblue',
+      // marginTop:'4%'
     },
     scan_block:{
         paddingTop:'8%',
       flex:1,
-      // justifyContent: "flex-start",
+      // justifyContent: "center",
       height: 50, 
-      backgroundColor: 'skyblue', 
+      // backgroundColor: 'skyblue', 
       justifyContent:"center"
     }
   });
