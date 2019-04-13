@@ -8,6 +8,9 @@ config = {
     "characterDelimiter": "\n"
   }
 
+function getBluetooth(){
+  return EasyBluetooth
+}
 function  init() {
     EasyBluetooth.init(this.config)
       .then(function (config) {
@@ -24,8 +27,6 @@ function  onStartScan(){
     return EasyBluetooth.startScan()
       .then(function (devices) {
         console.log("all devices found:");
-        // Todo add destroy dublicates
-        // console.log(devices);
         var obj = {};
 
         for (var i = 0, len = devices.length; i < len; i++)
@@ -34,54 +35,54 @@ function  onStartScan(){
         result = new Array();
         for (var address in obj)
           result.push(obj[address]);
-        
-        
         console.log(result);
-        
         return result
-        console.log(result);
       })
       .catch(function (ex) {
         console.warn(ex);
       });
   }
-  function setListener(){
 
+ function connectToDevice(device) {
+    // var device = this.getDevice()
+
+   return EasyBluetooth.connect(device)
   }
+
 
 function  bindListeners(obj){
     obj.onDeviceFoundEvent = EasyBluetooth.addOnDeviceFoundListener(onDeviceFound.bind(obj));
     // this.onStatusChangeEvent = EasyBluetooth.addOnStatusChangeListener(this.onStatusChange.bind(this));
-    obj.onDataReadEvent = EasyBluetooth.addOnDataReadListener(onDataRead.bind(obj));
+    // obj.onDataReadEvent = EasyBluetooth.addOnDataReadListener(onDataRead.bind(obj));
     // this.onDeviceNameEvent = EasyBluetooth.addOnDeviceNameListener(this.onDeviceName.bind(this));
   
   }
 function  onDeviceFound(device) {
     console.log("onDeviceFound");
     console.log(device);
-    
-    if (device.name == "raspberrypi") {
-      this.setState({
-        "device": device
-      })
-    }
   }
 
-function  onDataRead(data) {
-    console.log("onDataRead");
-    if ("OK" == data) {
-      console.log("Data is received");
-    }
-    console.log(data);
-  }
+function writeToDevice(message){
+
+  EasyBluetooth.write(message)
+      .then(() => {
+        console.log("Writing...")
+      })
+      .catch((ex) => {
+        console.warn(ex);
+      })
+}
+
 function getThis(that) {
     console.log(that);
     
 }
   export {
-      setListener,
       init,
       onStartScan,
       getThis,
-      bindListeners
+      bindListeners,
+      connectToDevice,
+      writeToDevice
+
   }
