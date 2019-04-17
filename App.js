@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, AppRegistry, TextInput, CheckBox } from
 import EasyBluetooth from 'easy-bluetooth-classic';
 import Scan from "./components/Scan"
 import { init, onStartScan, writeToDevice } from "./selector/selector"
+import KeyboardShift from './components/KeyboardShift';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class App extends React.Component {
       routerPassword: "",
       visiblePassword: false,
       editable: false,
+      // editable: true,
     }
 
     this.onSend = this.onSend.bind(this)
@@ -34,12 +36,12 @@ export default class App extends React.Component {
     // this.onDeviceNameEvent.remove();
   }
   onSend() {
-    writeToDevice("setWIFIData_"+this.state.routerName + "_"+this.state.routerPassword)
+    writeToDevice("setWIFIData_" + this.state.routerName + "_" + this.state.routerPassword)
     this.setState({
       routerName: "",
-      routerPassword:"",
+      routerPassword: "",
       visiblePassword: false,
-      editable:false
+      editable: false
     })
   }
   getDevice(device) {
@@ -48,19 +50,19 @@ export default class App extends React.Component {
   onDataRead(data) {
     console.log("onDataRead");
     var receivedData = JSON.parse(data)
-    if(receivedData.name == "getWIFIData"){
+    if (receivedData.name == "getWIFIData") {
       this.setState({
         routerName: receivedData.router,
         routerPassword: receivedData.password
       })
     }
-    
+
     // if ("OK" == data) {
     //   console.log("Data is received");
     // }
     console.log(data);
   }
-  enableEditing(){
+  enableEditing() {
     this.setState({
       editable: true
     })
@@ -68,30 +70,35 @@ export default class App extends React.Component {
   render() {
 
     return (
+
       <View style={styles.container}>
         <View style={styles.content}>
-          <Scan getDevice={this.getDevice} 
-                enableEditing = {this.enableEditing}/>
+          <Scan getDevice={this.getDevice}
+            enableEditing={this.enableEditing} />
           <View style={styles.wifi_form}>
-            <TextInput
+            <KeyboardShift>
+              {() => 
+                (<View>
+                  <TextInput
 
-              style={styles.textInput}
-              onChangeText={(routerName) => this.setState({ routerName })}
-              value={this.state.routerName}
-              editable={this.state.editable}
-              placeholder="Введіть ім'я роутера"
-              placeholderTextColor="black"
-            />
-            <TextInput
-              style={styles.textInput}
-              onChangeText={(routerPassword) => this.setState({ routerPassword })}
-              secureTextEntry={!this.state.visiblePassword}
-              value={this.state.routerPassword}
-              editable={this.state.editable}
-              placeholder="Введіть пароль роутера"
-              placeholderTextColor="black"
-            />
-            <View >
+                    style={styles.textInput}
+                    onChangeText={(routerName) => this.setState({ routerName })}
+                    value={this.state.routerName}
+                    editable={this.state.editable}
+                    placeholder="Введіть ім'я роутера"
+                    placeholderTextColor="black"
+                  />
+                  <TextInput
+                    style={styles.textInput}
+                    onChangeText={(routerPassword) => this.setState({ routerPassword })}
+                    secureTextEntry={!this.state.visiblePassword}
+                    value={this.state.routerPassword}
+                    editable={this.state.editable}
+                    placeholder="Введіть пароль роутера"
+                    placeholderTextColor="black"
+                  />
+
+                  <View >
               <View style={{ flexDirection: 'column' }}>
                 <View style={{ flexDirection: 'row' }}>
                   <CheckBox
@@ -117,10 +124,18 @@ export default class App extends React.Component {
                 disabled={!this.state.editable}
               />
             </View>
+                  </View>
+                  )
+              }
+
+              </KeyboardShift>
+
+            
 
           </View>
         </View>
       </View>
+      
     );
   }
 }
