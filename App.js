@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, AppRegistry, TextInput, CheckBox } from 'react-native';
+import { StyleSheet,Alert, Text, View,ActivityIndicator, Button, AppRegistry, TextInput, CheckBox, Picker } from 'react-native';
 import EasyBluetooth from 'easy-bluetooth-classic';
 import Scan from "./components/Scan"
 import { init, onStartScan, writeToDevice } from "./selector/selector"
 import KeyboardShift from './components/KeyboardShift';
+import NetworkPicker from './components/NetworkPicker';
+import Loader from './components/Loader';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -11,17 +13,20 @@ export default class App extends React.Component {
     this.state = {
       device: [],
       devices: [],
-      connection: "Не підключено",
-      routerName: "",
+      network:"",
       routerPassword: "",
       visiblePassword: false,
       editable: false,
+      networks: "",
+      activity:false
       // editable: true,
     }
 
     this.onSend = this.onSend.bind(this)
     this.getDevice = this.getDevice.bind(this)
     this.enableEditing = this.enableEditing.bind(this)
+    this.getNetwork = this.getNetwork.bind(this)
+    this.onGetIP = this.onGetIP.bind(this)
     // this.onStartScan = this.onStartScan.bind(this)
   }
 
@@ -36,27 +41,77 @@ export default class App extends React.Component {
     // this.onDeviceNameEvent.remove();
   }
   onSend() {
-    writeToDevice("setWIFIData_" + this.state.routerName + "_" + this.state.routerPassword)
+    
+    writeToDevice("setWIFIData_" + this.state.network + "_" + this.state.routerPassword)
+    
     this.setState({
-      routerName: "",
-      routerPassword: "",
-      visiblePassword: false,
-      editable: false
+      editable:false,
+      activity:true
     })
   }
   getDevice(device) {
     console.log(device);
   }
+  onGetIP(){
+    writeToDevice("getIP")
+    
+  }
+
   onDataRead(data) {
     console.log("onDataRead");
     var receivedData = JSON.parse(data)
+    // var receivedData = {"name": "getWIFIData", "router":"router","data":["wirys","router","smart"]}
+    
+    
+    
     if (receivedData.name == "getWIFIData") {
+      var networks = receivedData["data"];
+    if (receivedData["router"] != ""){
+      var index = networks.indexOf(receivedData["router"])
+      console.log("index");
+      console.log(index);
+      
+      
+    if(index != -1){
+      var tmp = networks[0]
+      networks[0] = networks[index] + "підключено"
+      networks[index] = tmp
+    }
+    }
       this.setState({
-        routerName: receivedData.router,
-        routerPassword: receivedData.password
+        networks : networks,
+        activity:false
       })
     }
+    if (receivedData.name == "setWIFIData") {
+    // @ToDo if connected ok or fail
+    console.log(receivedData["ipAddress"]);
+    if(receivedData["ipAddress"] != "FAIL"){
+      Alert.alert('Ферму підключено до мережі успішно! IP адреса: ' + receivedData["ipAddress"])
+      this.setState({
+        network: "",
+        routerPassword: "",
+        visiblePassword: false,
+        editable: false,
+        activity:false,
+      })
+    }else{
+      Alert.alert('Сталася помилка. Будь ласка перевірте логін та пароль ')
+      this.setState({
+        editable:true,
+        activity:false
+      })
+    }        
+    }
 
+    if(receivedData.name == "getIP"){
+      if(receivedData["ip"] != undefined & receivedData["ip"] != "NoIP"){
+        Alert.alert(receivedData["ip"])
+      }else{
+        Alert.alert("Помилка перевірте підключення")
+        }
+      
+    }
     // if ("OK" == data) {
     //   console.log("Data is received");
     // }
@@ -64,14 +119,29 @@ export default class App extends React.Component {
   }
   enableEditing() {
     this.setState({
-      editable: true
+      editable: true,
+      activity:true
+    })
+  }
+  getNetwork(network){
+    this.setState({
+      network: network
     })
   }
   render() {
-
+    console.log("activity");
+    console.log(this.state.activity);
+    {/* <View style={{right:'50%', top:'50%', position:'absolute'}}>
+        {/* <ActivityIndicator animating={this.state.activity} size="large" color="#0000ff" /> */}
+        
+        /* </View>  */
+    
     return (
 
       <View style={styles.container}>
+        
+        <Loader
+          loading={this.state.activity} />
         <View style={styles.content}>
           <Scan getDevice={this.getDevice}
             enableEditing={this.enableEditing} />
@@ -79,7 +149,13 @@ export default class App extends React.Component {
             <KeyboardShift>
               {() => 
                 (<View>
-                  <TextInput
+                 
+                  <Text>Виберіть wifi мережу</Text>
+                  <NetworkPicker getNetwork = {this.getNetwork} 
+                  networks={this.state.networks}
+                  enabled = {this.state.editable}
+                  /> 
+                  {/* <TextInput
 
                     style={styles.textInput}
                     onChangeText={(routerName) => this.setState({ routerName })}
@@ -87,7 +163,7 @@ export default class App extends React.Component {
                     editable={this.state.editable}
                     placeholder="Введіть ім'я роутера"
                     placeholderTextColor="black"
-                  />
+                  /> */}
                   <TextInput
                     style={styles.textInput}
                     onChangeText={(routerPassword) => this.setState({ routerPassword })}
@@ -118,7 +194,15 @@ export default class App extends React.Component {
               <Button
                 style={styles.buttons}
                 onPress={this.onSend}
-                title="Відправити дані"
+                title="Зберегти"
+                color="#841584"
+                accessibilityLabel="Learn more about this purple button"
+                disabled={!this.state.editable}
+              />
+              <Button
+                style={styles.buttons}
+                onPress={this.onGetIP}
+                title="Дізнатися IP адресу"
                 color="#841584"
                 accessibilityLabel="Learn more about this purple button"
                 disabled={!this.state.editable}
