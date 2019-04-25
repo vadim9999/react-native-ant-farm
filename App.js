@@ -45,7 +45,6 @@ export default class App extends React.Component {
     writeToDevice("setWIFIData_" + this.state.network + "_" + this.state.routerPassword)
     
     this.setState({
-      editable:false,
       activity:true
     })
   }
@@ -74,7 +73,7 @@ export default class App extends React.Component {
       
     if(index != -1){
       var tmp = networks[0]
-      networks[0] = networks[index] + "підключено"
+      networks[0] = networks[index] + " підключено"
       networks[index] = tmp
     }
     }
@@ -92,13 +91,13 @@ export default class App extends React.Component {
         network: "",
         routerPassword: "",
         visiblePassword: false,
-        editable: false,
+        
         activity:false,
       })
     }else{
       Alert.alert('Сталася помилка. Будь ласка перевірте логін та пароль ')
       this.setState({
-        editable:true,
+        
         activity:false
       })
     }        
