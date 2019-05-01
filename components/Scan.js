@@ -33,7 +33,11 @@ export default class Scan extends React.Component {
       console.log("Connected!");
       Alert.alert('Підключено до ферми успішно!')
       this.props.enableEditing()
-      writeToDevice("getWIFIData")
+      var data = {
+        "request":"getWIFIData"
+      }
+      writeToDevice(JSON.stringify(data))
+      // writeToDevice("getWIFIData")
       console.log(device);
     }).catch((ex) => {
       Alert.alert('Сталася помилка при підключенні до ферми')

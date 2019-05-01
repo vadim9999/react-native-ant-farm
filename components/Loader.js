@@ -6,26 +6,37 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-const Loader = props => {
-  const {
-    loading,
-    ...attributes
-  } = props;
+export default class Loader extends React.Component {
+  state = {
+    modalVisible: this.props.loading,
+  };
 
-  return (
-    <Modal
-      transparent={true}
-      animationType={'none'}
-      visible={loading}
-      onRequestClose={() => {console.log('close modal')}}>
-      <View style={styles.modalBackground}>
-        <View style={styles.activityIndicatorWrapper}>
-          <ActivityIndicator
-            animating={loading} />
+  // closeModal() {
+  //   this.setState({modalVisible:false});
+  // }
+
+  render(){
+    // const {
+    //   loading,
+    //   ...attributes
+    // } = this.props;
+
+    return (
+      <Modal
+        transparent={true}
+        animationType={'none'}
+        visible={this.props.loading}
+        onRequestClose={() => {this.props.onChangeActivity(false)
+         console.log('close modal')}}>
+        <View style={styles.modalBackground}>
+          <View style={styles.activityIndicatorWrapper}>
+            <ActivityIndicator
+              animating={this.props.loading} />
+          </View>
         </View>
-      </View>
-    </Modal>
-  )
+      </Modal>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -47,4 +58,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Loader;

@@ -27,6 +27,8 @@ export default class App extends React.Component {
     this.enableEditing = this.enableEditing.bind(this)
     this.getNetwork = this.getNetwork.bind(this)
     this.onGetIP = this.onGetIP.bind(this)
+    this.onChangeActivity = this.onChangeActivity.bind(this)
+    this.onRefreshWIFI = this.onRefreshWIFI.bind(this)
     // this.onStartScan = this.onStartScan.bind(this)
   }
 
@@ -41,9 +43,13 @@ export default class App extends React.Component {
     // this.onDeviceNameEvent.remove();
   }
   onSend() {
-    
-    writeToDevice("setWIFIData_" + this.state.network + "_" + this.state.routerPassword)
-    
+    var data = {
+      "request":"setWIFIData",
+      "network": this.state.network,
+      "password": this.state.routerPassword
+    }
+    // writeToDevice("setWIFIData_" + this.state.network + "_" + this.state.routerPassword)
+    writeToDevice(JSON.stringify(data))
     this.setState({
       activity:true
     })
@@ -52,10 +58,30 @@ export default class App extends React.Component {
     console.log(device);
   }
   onGetIP(){
-    writeToDevice("getIP")
+    var data = {
+      "request" : "getIP"
+    }
+    writeToDevice(JSON.stringify(data))
     
   }
 
+  onChangeActivity(activity){
+    this.setState(
+      {
+      activity:activity
+    }
+    )
+  }
+
+  onRefreshWIFI(){
+    this.setState({
+      activity:true
+    })
+    var data = {
+      "request":"getWIFIData"
+    }
+    writeToDevice(JSON.stringify(data))
+  }
   onDataRead(data) {
     console.log("onDataRead");
     var receivedData = JSON.parse(data)
@@ -63,7 +89,7 @@ export default class App extends React.Component {
     
     
     
-    if (receivedData.name == "getWIFIData") {
+    if (receivedData.request == "getWIFIData") {
       var networks = receivedData["data"];
     if (receivedData["router"] != ""){
       var index = networks.indexOf(receivedData["router"])
@@ -82,28 +108,27 @@ export default class App extends React.Component {
         activity:false
       })
     }
-    if (receivedData.name == "setWIFIData") {
+    if (receivedData.request == "setWIFIData") {
     // @ToDo if connected ok or fail
     console.log(receivedData["ipAddress"]);
     if(receivedData["ipAddress"] != "FAIL"){
-      Alert.alert('Ферму підключено до мережі успішно! IP адреса: ' + receivedData["ipAddress"])
+      Alert.alert('Ферму підключено до мережі успішно!')
       this.setState({
         network: "",
         routerPassword: "",
         visiblePassword: false,
-        
         activity:false,
       })
-    }else{
+    }
+    else {
       Alert.alert('Сталася помилка. Будь ласка перевірте логін та пароль ')
       this.setState({
-        
         activity:false
       })
     }        
     }
 
-    if(receivedData.name == "getIP"){
+    if(receivedData.request == "getIP"){
       if(receivedData["ip"] != undefined & receivedData["ip"] != "NoIP"){
         Alert.alert(receivedData["ip"])
       }else{
@@ -140,7 +165,7 @@ export default class App extends React.Component {
       <View style={styles.container}>
         
         <Loader
-          loading={this.state.activity} />
+          loading={this.state.activity} onChangeActivity = {this.onChangeActivity}/>
         <View style={styles.content}>
           <Scan getDevice={this.getDevice}
             enableEditing={this.enableEditing} />
@@ -204,6 +229,13 @@ export default class App extends React.Component {
                 title="Дізнатися IP адресу"
                 color="#841584"
                 accessibilityLabel="Learn more about this purple button"
+                disabled={!this.state.editable}
+              />
+              <Button
+                style={styles.buttons}
+                onPress={this.onRefreshWIFI}
+                title="Оновити список мереж"
+                color="#841584"
                 disabled={!this.state.editable}
               />
             </View>
