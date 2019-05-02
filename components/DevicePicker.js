@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Picker, ActivityIndicator, Alert } from 'react-native';
+import uuidv1 from 'uuid/v1'
 
-
-export default class DevicePicker extends React.PureComponent {
+export default class DevicePicker extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -26,10 +26,10 @@ export default class DevicePicker extends React.PureComponent {
                         pair = "Пара"
                     }
                     if (device != undefined & device.name != undefined)
-                        return <Picker.Item label={device.name + " " + device.address + " " + pair} value={device.address} />
+                        return <Picker.Item key = {uuidv1} label={device.name + " " + device.address + " " + pair} value={device.address} />
                     else if (device != undefined & device.address != undefined) {
-                        return <Picker.Item label={"NoName" + " " + device.address} value={device.address} />
-                    } else return <Picker.Item label={""} value={""} />
+                        return <Picker.Item key = {uuidv1} label={"NoName" + " " + device.address} value={device.address} />
+                    } else return <Picker.Item key = {uuidv1} label={""} value={""} />
                 }
                 ))
         }

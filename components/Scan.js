@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, Picker, ActivityIndicator, Alert } from
 import { writeToDevice, init, onStartScan, getThis, bindListeners, connectToDevice, onDataRead } from "../selector/selector"
 import EasyBluetooth from 'easy-bluetooth-classic';
 import DevicePicker from "./DevicePicker"
+import uuidv1 from 'uuid/v1'
 
 export default class Scan extends React.Component {
   constructor(props) {

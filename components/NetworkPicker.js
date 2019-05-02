@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Picker, ActivityIndicator, Alert } from 'react-native';
-
+import uuidv1 from 'uuid/v1'
 
 export default class NetworkPicker extends React.PureComponent {
     constructor(props) {
@@ -24,7 +24,7 @@ export default class NetworkPicker extends React.PureComponent {
             return (
                 networks.map(network => {
                     if (network != undefined)
-                        return <Picker.Item label={network } value={network} />
+                        return <Picker.Item key = {uuidv1} label={network } value={network} />
                     // else return <Picker.Item label={""} value={""} />
                     } 
                 
