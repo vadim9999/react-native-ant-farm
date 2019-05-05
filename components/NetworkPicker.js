@@ -56,32 +56,3 @@ export default class NetworkPicker extends React.PureComponent {
     }
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        // alignItems: 'center',
-        // justifyContent: 'space-between',
-    },
-    picker_activity: {
-        flexDirection: 'row'
-    },
-    button_block: {
-        flexDirection: 'row',
-        // justifyContent: 'center',
-    },
-    buttons: {
-        // flex:3,
-        backgroundColor: 'steelblue',
-        width: '50%'
-        // marginTop:'4%'
-    },
-    scan_block: {
-        paddingTop: '8%',
-        flex: 1,
-        // justifyContent: "center",
-        height: 50,
-        // backgroundColor: 'skyblue', 
-        justifyContent: "center"
-    }
-});

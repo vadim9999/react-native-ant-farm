@@ -1,11 +1,12 @@
 import React from 'react';
-import { StyleSheet,Alert, Text, View,ActivityIndicator, Button, AppRegistry, TextInput, CheckBox, Picker } from 'react-native';
+import { StyleSheet, Alert, Text, View, ImageBackground, Button, AppRegistry, TextInput, CheckBox, Picker } from 'react-native';
 import EasyBluetooth from 'easy-bluetooth-classic';
 import Scan from "./components/Scan"
 import { init, onStartScan, writeToDevice } from "./selector/selector"
 import KeyboardShift from './components/KeyboardShift';
 import NetworkPicker from './components/NetworkPicker';
 import Loader from './components/Loader';
+import image from "./background/83.png"
 // import whyDidYouUpdate from "why-did-you-update";
 // import whyDidYouUpdate from "rn-why-did-you-update";
 
@@ -17,12 +18,12 @@ export default class App extends React.PureComponent {
     this.state = {
       // device: [],
       // devices: [],
-      network:"",
+      network: "",
       routerPassword: "",
       visiblePassword: false,
       editable: false,
       networks: "",
-      activity:false
+      activity: false
       // editable: true,
     }
 
@@ -47,14 +48,14 @@ export default class App extends React.PureComponent {
 
   onSend() {
     var data = {
-      "request":"setWIFIData",
+      "request": "setWIFIData",
       "network": this.state.network,
       "password": this.state.routerPassword
     }
 
     writeToDevice(JSON.stringify(data))
     this.setState({
-      activity:true
+      activity: true
     })
   }
 
@@ -62,28 +63,28 @@ export default class App extends React.PureComponent {
   //   console.log(device);
   // }
 
-  onGetIP(){
+  onGetIP() {
     var data = {
-      "request" : "getIP"
+      "request": "getIP"
     }
     writeToDevice(JSON.stringify(data))
-    
+
   }
 
-  onChangeActivity(activity){
+  onChangeActivity(activity) {
     this.setState(
       {
-      activity:activity
-    }
+        activity: activity
+      }
     )
   }
 
-  onRefreshWIFI(){
+  onRefreshWIFI() {
     this.setState({
-      activity:true
+      activity: true
     })
     var data = {
-      "request":"getWIFIData"
+      "request": "getWIFIData"
     }
     writeToDevice(JSON.stringify(data))
   }
@@ -91,55 +92,55 @@ export default class App extends React.PureComponent {
     console.log("onDataRead");
     var receivedData = JSON.parse(data)
     // var receivedData = {"name": "getWIFIData", "router":"router","data":["wirys","router","smart"]}
-    
-    
-    
+
+
+
     if (receivedData.request == "getWIFIData") {
       var networks = receivedData["data"];
-    if (receivedData["router"] != ""){
-      var index = networks.indexOf(receivedData["router"])
-      console.log("index");
-      console.log(index);
-      
-      
-    if(index != -1){
-      var tmp = networks[0]
-      networks[0] = networks[index] + " підключено"
-      networks[index] = tmp
-    }
-    }
+      if (receivedData["router"] != "") {
+        var index = networks.indexOf(receivedData["router"])
+        console.log("index");
+        console.log(index);
+
+
+        if (index != -1) {
+          var tmp = networks[0]
+          networks[0] = networks[index] + " підключено"
+          networks[index] = tmp
+        }
+      }
       this.setState({
-        networks : networks,
-        activity:false
+        networks: networks,
+        activity: false
       })
     }
     if (receivedData.request == "setWIFIData") {
-    // @ToDo if connected ok or fail
-    console.log(receivedData["ipAddress"]);
-    if(receivedData["ipAddress"] != "FAIL"){
-      Alert.alert('Ферму підключено до мережі успішно!')
-      this.setState({
-        network: "",
-        routerPassword: "",
-        visiblePassword: false,
-        activity:false,
-      })
-    }
-    else {
-      Alert.alert('Сталася помилка. Будь ласка перевірте логін та пароль ')
-      this.setState({
-        activity:false
-      })
-    }        
+      // @ToDo if connected ok or fail
+      console.log(receivedData["ipAddress"]);
+      if (receivedData["ipAddress"] != "FAIL") {
+        Alert.alert('Ферму підключено до мережі успішно!')
+        this.setState({
+          network: "",
+          routerPassword: "",
+          visiblePassword: false,
+          activity: false,
+        })
+      }
+      else {
+        Alert.alert('Сталася помилка. Будь ласка перевірте логін та пароль ')
+        this.setState({
+          activity: false
+        })
+      }
     }
 
-    if(receivedData.request == "getIP"){
-      if(receivedData["ip"] != undefined & receivedData["ip"] != "NoIP"){
+    if (receivedData.request == "getIP") {
+      if (receivedData["ip"] != undefined & receivedData["ip"] != "NoIP") {
         Alert.alert(receivedData["ip"])
-      }else{
+      } else {
         Alert.alert("Помилка перевірте підключення")
-        }
-      
+      }
+
     }
     // if ("OK" == data) {
     //   console.log("Data is received");
@@ -149,10 +150,10 @@ export default class App extends React.PureComponent {
   enableEditing() {
     this.setState({
       editable: true,
-      activity:true
+      activity: true
     })
   }
-  getNetwork(network){
+  getNetwork(network) {
     this.setState({
       network: network
     })
@@ -162,29 +163,29 @@ export default class App extends React.PureComponent {
     console.log(this.state.activity);
     {/* <View style={{right:'50%', top:'50%', position:'absolute'}}>
         {/* <ActivityIndicator animating={this.state.activity} size="large" color="#0000ff" /> */}
-        
-        /* </View>  */
-    
-    return (
 
+    /* </View>  */
+
+    return (
+      <ImageBackground source={image} style={{width: '100%', height: '100%'}}>
       <View style={styles.container}>
-        
+
         <Loader
-          loading={this.state.activity} onChangeActivity = {this.onChangeActivity}/>
+          loading={this.state.activity} onChangeActivity={this.onChangeActivity} />
         <View style={styles.content}>
-          <Scan 
-          
+          <Scan
+
             enableEditing={this.enableEditing} />
           <View style={styles.wifi_form}>
             <KeyboardShift>
-              {() => 
+              {() =>
                 (<View>
-                 
+
                   <Text>Виберіть wifi мережу</Text>
-                  <NetworkPicker getNetwork = {this.getNetwork} 
-                  networks={this.state.networks}
-                  enabled = {this.state.editable}
-                  /> 
+                  <NetworkPicker getNetwork={this.getNetwork}
+                    networks={this.state.networks}
+                    enabled={this.state.editable}
+                  />
                   {/* <TextInput
 
                     style={styles.textInput}
@@ -205,58 +206,64 @@ export default class App extends React.PureComponent {
                   />
 
                   <View >
-              <View style={{ flexDirection: 'column' }}>
-                <View style={{ flexDirection: 'row' }}>
-                  <CheckBox
+                    <View style={{ flexDirection: 'column' }}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <CheckBox
 
-                    value={this.state.visiblePassword}
-                    disabled={!this.state.editable}
-                    onValueChange={() => {
-                      this.setState({
-                        visiblePassword: !this.state.visiblePassword
-                      }
-                      )
-                    }}
-                  />
-                  <Text style={{ marginTop: 5 }}> Показати пароль</Text>
-                </View>
-              </View>
-              <Button
-                style={styles.buttons}
-                onPress={this.onSend}
-                title="Зберегти"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-                disabled={!this.state.editable}
-              />
-              <Button
-                style={styles.buttons}
-                onPress={this.onGetIP}
-                title="Дізнатися IP адресу"
-                color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-                disabled={!this.state.editable}
-              />
-              <Button
-                style={styles.buttons}
-                onPress={this.onRefreshWIFI}
-                title="Оновити список мереж"
-                color="#841584"
-                disabled={!this.state.editable}
-              />
-            </View>
+                          value={this.state.visiblePassword}
+                          disabled={!this.state.editable}
+                          onValueChange={() => {
+                            this.setState({
+                              visiblePassword: !this.state.visiblePassword
+                            }
+                            )
+                          }}
+                        />
+                        <Text style={{ marginTop: 5 }}> Показати пароль</Text>
+                      </View>
+                    </View>
+                    <View style={styles.buttons}>
+                    <Button
+                      style={styles.buttons}
+                      onPress={this.onSend}
+                      title="Зберегти"
+                      color="#841584"
+                      accessibilityLabel="Learn more about this purple button"
+                      disabled={!this.state.editable}
+                    />
+                    </View>
+                    <View style={styles.buttons}>
+                    <Button
+                      style={styles.buttons}
+                      onPress={this.onGetIP}
+                      title="Дізнатися IP адресу"
+                      color="#841584"
+                      accessibilityLabel="Learn more about this purple button"
+                      disabled={!this.state.editable}
+                    />
+                    </View>
+                    <View style={styles.buttons}>
+                    <Button
+                      style={styles.buttons}
+                      onPress={this.onRefreshWIFI}
+                      title="Оновити список мереж"
+                      color="#841584"
+                      disabled={!this.state.editable}
+                    />
+                    </View>
                   </View>
-                  )
+                </View>
+                )
               }
 
-              </KeyboardShift>
+            </KeyboardShift>
 
-            
+
 
           </View>
         </View>
       </View>
-      
+      </ImageBackground>
     );
   }
 }
@@ -264,7 +271,7 @@ export default class App extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#D3D3D3',
+    // backgroundColor: '#F0F2F0',
 
     // alignItems: 'center',
     // justifyContent: 'space-between',
@@ -272,8 +279,9 @@ const styles = StyleSheet.create({
   buttons: {
     // flex:3,
     // backgroundColor: 'steelblue',
-    margin: 25,
-    color: 'green',
+    marginTop: 15,
+    
+    // color: 'green',
   },
   scan_block: {
     flex: 1,
