@@ -6,13 +6,15 @@ import { init, onStartScan, writeToDevice } from "./selector/selector"
 import KeyboardShift from './components/KeyboardShift';
 import NetworkPicker from './components/NetworkPicker';
 import Loader from './components/Loader';
+import whyDidYouUpdate from "why-did-you-update";
 
+whyDidYouUpdate(React);
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      device: [],
-      devices: [],
+      // device: [],
+      // devices: [],
       network:"",
       routerPassword: "",
       visiblePassword: false,
@@ -36,27 +38,28 @@ export default class App extends React.Component {
     init();
     this.onDataReadEvent = EasyBluetooth.addOnDataReadListener(this.onDataRead.bind(this));
   }
+
   componentWillUnmount() {
-    // this.onDeviceFoundEvent.remove();
-    // this.onStatusChangeEvent.remove();
     this.onDataReadEvent.remove();
-    // this.onDeviceNameEvent.remove();
   }
+
   onSend() {
     var data = {
       "request":"setWIFIData",
       "network": this.state.network,
       "password": this.state.routerPassword
     }
-    // writeToDevice("setWIFIData_" + this.state.network + "_" + this.state.routerPassword)
+
     writeToDevice(JSON.stringify(data))
     this.setState({
       activity:true
     })
   }
+
   getDevice(device) {
     console.log(device);
   }
+  
   onGetIP(){
     var data = {
       "request" : "getIP"
