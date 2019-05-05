@@ -8,7 +8,7 @@ export default class NetworkPicker extends React.PureComponent {
         this.state = {
             network: "",
             // activity: true,
-            networks: []
+            // networks: []
 
         }
     }

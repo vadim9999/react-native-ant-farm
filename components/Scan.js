@@ -1,11 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Picker, ActivityIndicator, Alert } from 'react-native';
-import { writeToDevice, init, onStartScan, getThis, bindListeners, connectToDevice, onDataRead } from "../selector/selector"
-import EasyBluetooth from 'easy-bluetooth-classic';
+import { StyleSheet, Text, View, Button, ActivityIndicator, Alert } from 'react-native';
+import { writeToDevice, onStartScan, connectToDevice } from "../selector/selector"
 import DevicePicker from "./DevicePicker"
-import uuidv1 from 'uuid/v1'
 
-export default class Scan extends React.Component {
+
+export default class Scan extends React.PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -87,7 +86,7 @@ export default class Scan extends React.Component {
     var device = this.state.devices.find(device => {
       return device.address == itemValue
     })
-    this.props.getDevice(device)
+    // this.props.getDevice(device)
     this.setState({ device: itemValue })
   }
   render() {

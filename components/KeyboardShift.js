@@ -1,10 +1,10 @@
 import { PropTypes } from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { Animated, Dimensions, Keyboard, StyleSheet, TextInput, UIManager } from 'react-native';
 
 const { State: TextInputState } = TextInput;
 
-export default class KeyboardShift extends Component {
+export default class KeyboardShift extends PureComponent {
   state = {
     shift: new Animated.Value(0),
   };

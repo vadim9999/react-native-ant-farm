@@ -6,10 +6,12 @@ import { init, onStartScan, writeToDevice } from "./selector/selector"
 import KeyboardShift from './components/KeyboardShift';
 import NetworkPicker from './components/NetworkPicker';
 import Loader from './components/Loader';
-import whyDidYouUpdate from "why-did-you-update";
+// import whyDidYouUpdate from "why-did-you-update";
+// import whyDidYouUpdate from "rn-why-did-you-update";
 
-whyDidYouUpdate(React);
-export default class App extends React.Component {
+// whyDidYouUpdate(React);
+// whyDidYouUpdate(React);
+export default class App extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +27,7 @@ export default class App extends React.Component {
     }
 
     this.onSend = this.onSend.bind(this)
-    this.getDevice = this.getDevice.bind(this)
+    // this.getDevice = this.getDevice.bind(this)
     this.enableEditing = this.enableEditing.bind(this)
     this.getNetwork = this.getNetwork.bind(this)
     this.onGetIP = this.onGetIP.bind(this)
@@ -56,10 +58,10 @@ export default class App extends React.Component {
     })
   }
 
-  getDevice(device) {
-    console.log(device);
-  }
-  
+  // getDevice(device) {
+  //   console.log(device);
+  // }
+
   onGetIP(){
     var data = {
       "request" : "getIP"
@@ -170,7 +172,8 @@ export default class App extends React.Component {
         <Loader
           loading={this.state.activity} onChangeActivity = {this.onChangeActivity}/>
         <View style={styles.content}>
-          <Scan getDevice={this.getDevice}
+          <Scan 
+          
             enableEditing={this.enableEditing} />
           <View style={styles.wifi_form}>
             <KeyboardShift>

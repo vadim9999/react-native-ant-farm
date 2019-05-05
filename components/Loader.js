@@ -6,7 +6,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 
-export default class Loader extends React.Component {
+export default class Loader extends React.PureComponent {
   state = {
     modalVisible: this.props.loading,
   };

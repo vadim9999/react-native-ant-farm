@@ -8,7 +8,7 @@ export default class DevicePicker extends React.Component {
         this.state = {
             device: "",
             activity: true,
-            devices: []
+            
 
         }
     }
